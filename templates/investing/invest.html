@@ -1,0 +1,285 @@
+{% load static %}
+<html lang="zh-CN" id="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI公司融资信息</title>
+    <link href="{% static 'emailing/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'emailing/js/jquery.min.js' %}"></script>
+    <script src="{% static 'emailing/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'investing/js/colResizable-1.6.js' %}"></script>
+    <script src="{% static 'investing/jscolResizable-1.6.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<style>
+    body{
+        color: #34373C;
+        font-family: "Helvetica", sans-serif;
+    }
+    #header{
+        width: 100%;
+        height: 60px;
+        background-color: #34373C;
+        border: none;
+        box-shadow: #b1b1b1 0px 3px 5px;
+    }
+    #company-search{
+        position: absolute;
+        font-size: 14px;
+        height: 35px;
+        width: 400px;
+        margin-top: 10px;
+        margin-left: 25px;
+        border-radius: 2px;
+        border:none;
+        outline: none;
+        padding-left: 40px;
+    }
+    #search-icon{
+        position: absolute;
+        margin-top: 20px;
+        margin-left: 40px;
+    }
+
+    ::placeholder{
+        color: #9A9A9A;
+    }
+
+    #title{
+        font-size: 35px;
+        margin-top: 30px;
+        margin-left: 30px;
+    }
+
+    #title-block{
+        background-color: #E9EFF5;
+        height: 100px;
+        z-index: -1;
+        margin-bottom: -70px;
+    }
+
+    #company-list{
+        height: 70px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: white;
+        border: none;
+        color: #34373C;
+        border-radius: 10px 10px 0px 0px;
+        width: 200px;
+        box-shadow: rgba(203, 203, 203, 0.71) 4px 4px 4px;
+    }
+
+    #save-list{
+        height: 70px;
+        font-size: 16px;
+        background-color: transparent;
+        font-weight: 10px;
+        border: none;
+        color: #34373C;
+        border-radius: 10px 10px 0px 0px;
+        width: 200px;
+        /*box-shadow: rgba(203, 203, 203, 0.71) 0px -1px 10px;*/
+    }
+
+    #export{
+        height: 30px;
+        width: 100px;
+        font-size: 16px;
+        background-color: transparent;
+        border: #4A95E8 2px solid;
+        color: #4A95E8;
+        margin-left: calc(100% - 120px);
+        margin-top: 10px;
+    }
+
+    #export:hover{
+        background-color: #DCE8FF;
+    }
+
+    #result-block{
+        height: 1000px;
+        width: 100%;
+        box-shadow: rgba(203, 203, 203, 0.71) 0px -1px 10px;
+    }
+
+    #filter-block{
+        width: 300px;
+        border-right: 1px #9A9A9A solid;
+        padding-top: 20px;
+    }
+
+    #company-block{
+        width: calc(100% - 300px);
+        padding-top: 30px;
+    }
+    
+    #clear-filter{
+        font-size: 16px; 
+        color: #9A9A9A;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+    }
+
+    #clear-filter:active{
+        color: #777777;
+    }
+
+    .search{
+        font-size: 12px;
+        height: 30px;
+        width: 200px;
+        border-radius: 2px;
+        border: #C1C1C1 1px solid;
+        margin-top: 5px;
+        padding-left: 25px;
+        position:absolute;
+    }
+
+    .search:focus{
+        outline: #4A95E8 2px solid;
+        border-radius: 2px;
+    }
+
+    .search-icon_small{
+        z-index: 1000;
+        position: absolute;
+        margin-top: 13px;
+        margin-left: 8px;
+    }
+
+    #filter-btn{
+        width: 200px;
+        margin-left: 30px;
+        background-color: transparent;
+        border: #4A95E8 2px solid;
+        border-radius: 2px;
+        color: #4A95E8;
+    }
+
+    #filter-btn:hover{
+        background-color: #DCE8FF;
+    }
+
+    #company-table{
+       border-spacing: 5px;
+    }
+
+    th{
+        border-right: 1px #9A9A9A solid;
+    }
+    td{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+</style>
+<body>
+<main class="flex-column d-flex container-fluid p-0">
+<div class="d-flex flex-row" id="header">
+    <img src="{% static 'emailing/images/chuangxin.svg' %}" height="35" style="margin-top: 10px; margin-left: 20px">
+    <div style="position: relative">
+        <input id="company-search" type="text" placeholder="搜索公司">
+        <svg id="search-icon" width="0.8em" height="0.8em" viewBox="0 0 16 16" class="bi bi-search" fill="#34373C" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+        <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+        </svg>
+    </div>
+</div>
+<div id="title-block">
+    <div id="title">
+        AI公司融资信息搜索
+    </div>
+</div>
+<div>
+    <div style="display: flex; flex-direction: row; margin-left: 400px; overflow: hidden">
+        <div style="width:200px; flex: 0 0 200px"><button id="company-list">公司列表</button></div>
+        <div style="width:200px; flex: 0 0 200px"><button id="save-list">我的收藏</button></div>
+        <div style="flex: 1 1 200px""><button id="export">导出CSV</button></div>
+    </div>
+<div id="result-block" class="d-flex flex-row">
+    <div id="filter-block">
+        <div class="d-flex flex-row align-items-center">
+            <div style="font-size:30px; font-weight: bolder; margin-right: 100px; margin-left: 30px;">Filter</div>
+            <button id="clear-filter">清空</button>
+        </div>
+        <button id="filter-btn">Apply Filter</button>
+        <div class="d-flex flex-column" style="margin-top: 20px; margin-left: 30px;">
+            <div>公司领域</div>
+            <div style="position: relative; height: 25px">
+            <input id="area-search" class="search" type="text" placeholder="搜索领域，如：ML，CV">
+            <svg width="0.7em" height="0.8em" viewBox="0 0 16 16" class="search-icon_small bi bi-search" fill="#34373C" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+            </svg>
+            </div>
+        </div>
+        <div class="d-flex flex-column" style="margin-top: 20px; margin-left: 30px;">
+            <div>公司位置</div>
+            <div style="position: relative; height: 25px">
+                <input id="location-search" class="search" type="text" placeholder="搜索位置，如：US">
+                <svg width="0.7em" height="0.8em" viewBox="0 0 16 16" class="search-icon_small bi bi-search" fill="#34373C" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                </svg>
+            </div>
+        </div>
+        <div style="margin-top: 20px; margin-left: 30px; height: 25px">
+            <div>融资金额</div>
+            <div class="flex-row d-flex align-items-center">
+                </span>$</span><input id="lower-amount" style="padding-left:5px;position:relative;width:80px;margin-right: 10px; margin-left: 5px" class="search" type="text"> <span>-</span> <input id="upper-amount" style="padding-left:5px;position:relative;width:80px; margin-left: 10px;" class="search" type="text">
+            </div>
+        </div>
+    </div>
+    <div id="company-block">
+    <table id='company-table' width="100%" border="0">
+        <tbody>
+        <tr>
+            <th>公司名称</th><th>领域标签</th><th>公司地点</th><th>公司估值</th><th>融资金额</th><th>融资时间</th><th>融资轮次</th><th>领投方</th><th>融资新闻链接</th>
+        </tr>
+        <div>
+        <tr>
+            <td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td><td>abcdef</td>
+        </tr>
+        </div>
+        </tbody>
+    </table>
+    </div>
+</div>
+</div>
+</main>
+</body>
+<script>
+    $(document).ready(function () {
+        effectHandler.getEffects();
+        $("#company-table").colResizable({liveDrag:true});
+    });
+
+
+    let effectHandler = (function(){
+        const toggleHeader = function () {
+            $('#company-search').focus(function () {
+                $('#header').css('background-color','#EF8839');
+            })
+            $('#company-search').blur(function () {
+                $('#header').css('background-color','#34373C');
+            })
+        };
+        return{
+            getEffects: function(){
+                toggleHeader();
+            }
+        }
+    })();
+
+    let filterManagement = (function(){
+        const clearFilter = function(){
+            $('clear-filter').on('click',function(){
+
+            })
+        }
+    })
+
+
+
+</script>
+</html>
