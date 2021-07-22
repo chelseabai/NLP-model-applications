@@ -1,0 +1,1207 @@
+{% load static %}
+<html lang="zh-CN" id="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>中文GPT-2游乐场</title>
+    <link href="{% static 'emailing/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'emailing/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'emailing/js/popper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'emailing/js/bootstrap.min.js' %}"></script>
+    <style>
+        body{
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #272a28;
+            min-width: 990px;
+        }
+
+        .bg {
+            background-image: url('../static/emailing/images/background.svg');
+            background-position: top;
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            min-width: 100vw;
+            align-items: center;
+        }
+
+        .navbar{
+            background-color: transparent !important;
+            max-width:1800px;
+            min-width:90%;
+            min-height: 80px;
+        }
+
+        .nav-item{
+            margin-left: 5vw !important;
+            display: inline-flex;
+            align-items: baseline;
+        }
+
+        .navbar-toggler{
+            border: none;
+        }
+
+        #generate{
+            color: white;
+            background: #cc6699;
+            border: none;
+            font-size: 16px;
+            white-space: nowrap;
+            border-radius: 50px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-right: 60px;
+            padding-left: 60px;
+            box-shadow: lightgrey 5px 5px 30px;
+            animation: slide_in_btn 1.3s;
+        }
+
+        @keyframes slide_in_btn {
+            0% {
+                margin-left: 100px;
+                opacity: 0;
+            }
+            40%{
+                margin-left: 100px;
+                opacity: 0;
+            }
+            100%{
+                margin-left: 0px;
+                opacity: 1;
+            }
+        }
+
+        #generate:hover{
+            padding-left: 62px;
+            padding-right: 62px;
+            padding-top: 11px;
+            padding-bottom: 11px;
+            margin-left: -2px;
+            margin-top: -1px;
+        }
+
+        #generate:active{
+            border: 2px solid white;
+        }
+
+        #main-cont{
+            width: 2000px;
+            max-width: 100%;
+            margin-bottom: 5px;
+            position: relative;
+            min-height: 700px;
+        }
+
+        #words{
+            position: relative;
+            margin-left: calc((65% - 530px)/2.5);
+            margin-right: calc((65% - 530px)/2.5);
+            display: none;
+        }
+
+        #reply {
+            width: 80%;
+            margin-top: 5px;
+            margin-left: 10%;
+            height: 52%;
+            overflow: auto;
+            color: #272a28;
+            border: whitesmoke 1px solid;
+        }
+
+        #reply:focus {
+            outline: lightgrey 1px solid;
+        }
+
+
+        .subject_title{
+            color: #272a28;
+            margin-left: 10%;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #subject{
+            background-color: transparent;
+            border: whitesmoke 1px solid;
+            color: #272a28;
+            width: 80%;
+            margin-top: 5px;
+            margin-left: 10%;
+            height: 150px;
+            overflow: auto;
+        }
+
+        #subject:focus {
+            outline: lightgrey 1px solid;
+        }
+
+        #span1{
+            display: block;
+            width: 90%;
+            margin-left:5%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-top: 0.5px lightgrey solid;
+        }
+
+        #left-cont {
+            width: 65%;
+            margin-top: 5%;
+            animation: slide_up 1s;
+        }
+
+        @keyframes slide_up{
+            0%{
+                margin-top: 15%;
+            }
+            100% {
+                margin-top: 5%;
+            }
+        }
+
+        #right-cont{
+            padding-top: 10%;
+            text-align: left;
+            width: 35%;
+        }
+
+        #editor{
+            background-color: white;
+            width: 530px;
+            height: 600px;
+            border-radius: 30px;
+            margin-left: calc((100% - 530px)/2.5);
+            position: relative;
+            box-shadow: 5px 5px 10px rgba(185, 185, 185, 0.20);
+        }
+
+        #question{
+            position: absolute;
+            margin-left: 495px;
+            margin-top: 28px;
+            z-index:3;
+        }
+        #question:hover{
+            cursor: pointer;
+        }
+
+        #notice {
+            position:absolute;
+            height:40px;
+            margin-left: 505px;
+            margin-top: 35px;
+            z-index: 0;
+            display: none;
+        }
+
+        #notice-text {
+            position: absolute;
+            font-size: 12px;
+            margin-left: 645px;
+            margin-top: 40px;
+            white-space:nowrap;
+            color: #272a28;
+            display: none;
+        }
+
+        #delete-email{
+            position: absolute;
+            margin-left: 491px;
+            margin-top: 2px;
+        }
+
+        #delete-email:hover {
+            cursor: pointer;
+        }
+
+        #copy-email {
+            position: absolute;
+            margin-left: 460px;
+            margin-top: 5px;
+        }
+
+        #copy-email:hover{
+            cursor: pointer;
+        }
+
+        #hover-text{
+            width:40px;
+            height: 18px;
+            background-color: #66d5c0;
+            position: absolute;
+            margin-top: 23px;
+            border-radius: 100px;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            padding-top: 1px;
+            visibility: hidden;
+        }
+
+        .state-button {
+            position: absolute;
+            display: flex;
+            flex-direction: row;
+            margin-top: 320px;
+            margin-left: 20px;
+        }
+
+        .state-button:hover {
+            cursor: pointer;
+        }
+
+        .state-button:hover .state-button-primary {
+            box-shadow: 1px 0 0 0 rgba(0, 0, 0, .1);
+        }
+
+        .state-button-primary {
+            background-color: white;
+            height: 22px;
+            width: 22px;
+            border-radius: 11px;
+            z-index: 1;
+        }
+
+        .state-button-secondary{
+            overflow: hidden;
+            margin-left: -11px;
+            height: 22px;
+            z-index: 0;
+
+        }
+
+        .state-button-secondary-content{
+            font-family: sans-serif;
+            font-size: .75em;
+            background: #272a28;
+            display: block;
+            height: 22px;
+            text-align: left;
+            padding-left: 20px;
+            padding-right: 20px;
+            line-height: 22px;
+            color: white;
+            border-radius: 0 11px 11px 0;
+            transform: translate3d(-100%, 0, 0);
+            transition: transform 175ms ease;
+        }
+
+        #eng_title{
+            font-size: 40px;
+            font-family: Futura;
+            color: #414042;
+            animation: slide_in_eng 1s;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #chi_title{
+            font-size: 30px;
+            color: #414042;
+            animation: slide_in_chi 0.8s;
+            white-space: nowrap;
+        }
+
+        #panel{
+            width: 300px;
+            height: 300px;
+            margin-top: 2.5%;
+            animation: slide_in_panel 1s;
+        }
+
+        #model-btn{
+            margin-top: 2.5%;
+        }
+
+        @keyframes slide_in_panel {
+            0% {
+                margin-left: 100px;
+                opacity: 0;
+            }
+            40%{
+                margin-left: 100px;
+                opacity: 0;
+            }
+            100%{
+                margin-left: 0px;
+                opacity: 1;
+            }
+        }
+
+        .slider{
+            margin-bottom: 20px;
+            margin-top: 7.5px;
+            margin-right: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: whitesmoke;
+            border-radius: 20px;
+            width: 70%;
+            height: 10px;
+            outline: none;
+            box-shadow: lightgrey 3px 1px 5px;;
+        }
+
+        .slider::-webkit-slider-thumb{
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 15px;
+            background: #66d5c0;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .slider::-webkit-slider-thumb:hover{
+            opacity: 1;
+        }
+
+        @keyframes slide_in_eng {
+            from {
+                margin-left: 100px;
+                color: #414042;
+                opacity: 0;
+            }
+            to{
+                margin-left: 0px;
+                color: #414042;
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide_in_chi {
+            0% {
+                margin-left: 100px;
+                color: #414042;
+                opacity: 0;
+            }
+            30%{
+                margin-left: 100px;
+                color: #414042;
+                opacity: 0;
+            }
+            100%{
+                margin-left: 0px;
+                color: #414042;
+                opacity: 1;
+            }
+        }
+
+        button:focus {
+            outline:0;
+        }
+
+        #mobile-generate{
+            display: none;
+        }
+
+        #mobile-panel{
+            display: none;
+        }
+
+        #mobile-panel-delete{
+            display: none;
+        }
+
+
+        /* Hang */
+        @-webkit-keyframes hvr-hang {
+            0% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+            50% {
+                -webkit-transform: translateY(4px);
+                transform: translateY(4px);
+            }
+            100% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+        }
+        @keyframes hvr-hang {
+            0% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+            50% {
+                -webkit-transform: translateY(4px);
+                transform: translateY(4px);
+            }
+            100% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+        }
+        @-webkit-keyframes hvr-hang-sink {
+            100% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+        }
+        @keyframes hvr-hang-sink {
+            100% {
+                -webkit-transform: translateY(15px);
+                transform: translateY(15px);
+            }
+        }
+        #scroll-down{
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+            -webkit-transform: perspective(1px) translateZ(0);
+            transform: perspective(1px) translateZ(0);
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+            }
+        #scroll-down:hover, #scroll-down:focus, #scroll-down:active {
+            -webkit-animation-name: hvr-hang-sink, hvr-hang;
+            animation-name: hvr-hang-sink, hvr-hang;
+            -webkit-animation-duration: .3s, 1.5s;
+            animation-duration: .3s, 1.5s;
+            -webkit-animation-delay: 0s, .3s;
+            animation-delay: 0s, .3s;
+            -webkit-animation-timing-function: ease-out, ease-in-out;
+            animation-timing-function: ease-out, ease-in-out;
+            -webkit-animation-iteration-count: 1, infinite;
+            animation-iteration-count: 1, infinite;
+            -webkit-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+            -webkit-animation-direction: normal, alternate;
+            animation-direction: normal, alternate;
+        }
+
+        .explanation{
+            font-size: 16px;
+        }
+
+        .small-title{
+            font-size: 20px;
+            margin-top: 100px;
+            margin-bottom: 10px;
+            font-style: italic;
+            color: white;
+        }
+
+        .small-title::before{
+            position: absolute;
+            content:"";
+            display: inline-block;
+            height: 30px;
+            width: 150px;
+            background: rgba(148,164,248,1);
+            border-left: solid 5px rgba(110,129,247,1);
+            margin-right: 10px;
+            -webkit-transform: skew(-18deg);
+            -ms-transform: skew(-18deg);
+            transform: skew(-18deg);
+            z-index: -1;
+        }
+
+        .large-title{
+            font-size: 40px;
+            margin-top: 100px;
+            margin-bottom: 50px;
+        }
+
+        #chuangxin{
+            margin-top: 100px;
+            margin-bottom: 50px;
+            color: lightgrey;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /*--------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------*/
+
+        @media screen and (max-width: 500px){
+
+            body{
+                min-width: 0;
+            }
+
+            #main-cont{
+                display: block;
+                position: relative;
+                margin-top: 1vh;
+                min-height: 600px;
+            }
+
+            .bg {
+                background: #fbfdff;
+                margin-bottom: 0;
+            }
+
+            .navbar{
+                background: rgb(110,129,247) !important;
+                background: linear-gradient(152deg, rgba(110,129,247,1) 0%, rgba(148,164,248,1) 100%) !important;
+                width: 100%;
+                margin-top: 0 !important;
+                box-shadow: 5px 5px 10px #ececec;
+                display: block;
+                min-height: auto;
+            }
+
+            .navbar-toggler{
+                margin-left: calc(100% - 200px) !important;
+            }
+
+            .nav-item{
+                font-size: 15px !important;
+            }
+
+            #right-cont{
+                position: absolute;
+                padding-top: 0;
+                width: 100%;
+                /*overflow: hidden;*/
+            }
+
+            #eng_title{
+                font-size: 30px;
+                padding-left: 20px;
+            }
+
+            #chi_title{
+                font-size: 20px;
+                padding-left: 20px;
+            }
+
+            #generate{
+                display: none;
+            }
+
+            #left-cont{
+                position: absolute;
+                padding-top: 0;
+                margin-top: 0;
+                width: 100%;
+                animation: none !important;
+            }
+
+            #editor{
+                /*background-color: white;*/
+                /*width: 90%;*/
+                /*margin-left: 5%;*/
+                /*height: 500px;*/
+                /*margin-top: 100px;*/
+                /*border-radius: 5px;*/
+                /*position: relative;*/
+                /*box-shadow: 5px 5px 10px whitesmoke;*/
+                background: none;
+                width: 90%;
+                margin-left: 5%;
+                box-shadow: none;
+                margin-top: 100px;
+            }
+
+            .subject_title{
+                font-size: 15px;
+                color: #8f95aa;
+            }
+
+            #span1{
+                display: none;
+            }
+
+
+            #top-editor{
+                background: white;
+                box-shadow: 0px 0px 30px #ececec;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            #bottom-editor{
+                background: white;
+                box-shadow: 0px 0px 30px #ececec;
+                border-radius: 10px;
+                padding-top: 20px;
+                padding-bottom: 40px;
+            }
+
+            #subject{
+                height: 100px;
+                overflow: auto;
+                border-radius: 5px;
+                border: lightgrey 2px solid;
+                font-size: 15px;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            #subject:focus{
+                outline: none;
+                border-radius: 5px;
+                border: rgb(110,129,247) 2px solid;
+                font-size: 15px;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            #reply{
+                padding-left: 5px;
+                padding-right: 5px;
+                height: 200px;
+                border-radius: 5px;
+                border: lightgrey 2px solid;
+                font-size: 15px;
+            }
+
+            #reply:focus{
+                outline: none;
+                border-radius: 5px;
+                border: rgb(110,129,247) 2px solid;
+                font-size: 15px;
+            }
+
+            .state-button {
+                margin-top: 235px;
+                margin-left: 20px;
+            }
+
+            #words{
+                width: 80%;
+                margin-left: 10%;
+                margin-right: 10%;
+                padding-top: 0px;
+                margin-top: 40px;
+            }
+
+            .explanation{
+                font-size: 12px;
+            }
+
+            .small-title{
+                margin-top: 50px;
+            }
+
+            .large-title{
+                font-size: 20px;
+                margin-top: 0px;
+            }
+
+            #logo{
+                display: none;
+            }
+
+            #scroll-down{
+                width: 4em;
+                height: 4em;
+                margin-top: 0;
+                padding-top: 0;
+            }
+
+
+            #mobile-generate{
+                display: block;
+                width: 70px;
+                color: white;
+                background: linear-gradient(152deg, rgb(110,129,247) 0%, rgba(148,164,248,1) 100%) !important;
+                border: none;
+                font-size: 15px;
+                white-space: nowrap;
+                border-radius: 5px;
+                margin-top: 10px;
+                margin-left: calc(90% - 70px);
+                margin-bottom: 10px;
+                padding-top: 3px;
+                padding-bottom: 3px;
+            }
+
+            #mobile-generate:active{
+                background: rgb(77, 101, 247) !important;
+            }
+
+
+            #mobile-panel{
+                display: block;
+                position: absolute;
+                margin-left: 90%;
+                margin-top: 22px;
+                z-index:3;
+                fill: #cc6699;
+            }
+
+            #mobile-panel-delete{
+                display: block;
+                margin-left: 80%;
+                margin-top: 0;
+            }
+
+            #panel{
+                position: absolute;
+                width:0%;
+                height: 280px;
+                color:#8f95aa;
+                font-size: 15px;
+                padding-top: 5px;
+                padding-left: 0;
+                margin-left: 98.5vw;
+                background: #fbfdff;
+                border-radius: 5px 0px 0px 5px;
+                animation: none !important;
+                z-index: 10000;
+                border-left: 1.5vw solid #cc6699;
+                transition: 0.4s;
+                overflow: hidden;
+                box-shadow: 5px 5px 10px #ececec;
+            }
+
+            #panel-cont{
+                /*display: none;*/
+                white-space: nowrap;
+            }
+
+
+            #question{
+                /*position: absolute;*/
+                /*margin-left: 90%;*/
+                /*margin-top: 28px;*/
+                /*z-index:3;*/
+                display: none;
+            }
+
+            #notice {
+                /*position:absolute;*/
+                /*height:40px;*/
+                /*margin-left: 505px;*/
+                /*margin-top: 35px;*/
+                /*z-index: 0;*/
+                display: none !important;
+            }
+
+            #notice-text {
+                /*position: absolute;*/
+                /*font-size: 12px;*/
+                /*margin-left: 645px;*/
+                /*margin-top: 40px;*/
+                /*white-space:nowrap;*/
+                /*color: #272a28;*/
+                display: none !important;
+            }
+
+            #delete-email{
+                position: absolute;
+                margin-left: 90%;
+            }
+
+            #delete-email:hover {
+                cursor: pointer;
+            }
+
+            #delete-email svg{
+                fill: #cc6699;
+            }
+
+            #copy-email {
+                position: absolute;
+                margin-left: 80%;
+                margin-top: 4px;
+            }
+
+            #copy-email:hover{
+                cursor: pointer;
+            }
+
+            #copy-email svg{
+                fill: #cc6699;
+            }
+
+            #hover-text{
+                display: none;
+            }
+
+
+            #chuangxin{
+                margin-top: 100px;
+                margin-bottom: 20px;
+                display: block;
+                z-index: 1000000;
+            }
+
+
+        }
+    </style>
+</head>
+<body>
+<main class="bg d-flex flex-column align-items-center container-fluid vh-100 p-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light mt-3">
+        <a class="navbar-brand" href="#"><img src="{% static 'emailing/images/chuangxin.svg' %}" height="40px"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">GPT模型</a>
+                    <img src="{% static 'emailing/images/bullet.svg' %}" width="5px" style="visibility:visible">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'advertise' %}">广告设计</a>
+                    <img src="{% static 'emailing/images/bullet.svg' %}" width="5px" style="visibility:hidden">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'excel' %}">生成报表</a>
+                    <img src="{% static 'emailing/images/bullet.svg' %}" width="5px" style="visibility:hidden">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'email' %}">回复邮件</a>
+                    <img src="{% static 'emailing/images/bullet.svg' %}" width="5px" style="visibility: hidden">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">关于我们</a>
+                    <img src="{% static 'emailing/images/bullet.svg' %}" width="5px" style="visibility: hidden">
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="main-cont" class="d-flex flex-row">
+        <div id="left-cont">
+            <div id="editor">
+                <div id="top-editor" class="d-flex flex-column">
+                    <span class="subject_title">我的输入:</span>
+                    <img id="notice" src="{% static 'emailing/images/notice.svg'%}">
+                    <div id="notice-text" style="background: white; border-radius: 5px; padding-top:5px; padding-bottom:5px; padding-left:10px; padding-right:5px; box-shadow: 5px 5px 5px rgba(185,185,185,0.2)"><div>请在输入框中输入您想传入模型的信息，</div>
+                        模型将在下方生成输出。</div>
+                    <div contenteditable="true" id="subject"></div>
+                    <button id="mobile-generate">生成</button>
+                    <svg id="mobile-panel" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-sliders" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z"/>
+                    </svg>
+                    <svg id="question" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle-fill" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+                    </svg>
+                </div>
+                <span id="span1"></span>
+                <div id="bottom-editor">
+                    <div id="delete-email">
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-x" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div id="copy-email">
+                        <!-- <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-clipboard" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path fill-rule="evenodd" d="M9.5 1h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg> -->
+                        <svg class="icon" width="1.1em" height="1.1em" fill="lightgrey" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M740.6 183.3v71.5h-57.2v-71.5c0-3.8-1.4-7.3-4.2-10-2.8-2.8-6.2-4.2-10-4.2H183.4c-3.8 0-7.3 1.4-10 4.2-2.7 2.8-4.2 6.2-4.2
+                            10v485.9c0 3.8 1.4 7.3 4.2 10 2.8 2.8 6.2 4.2 10 4.2h71.5v57.2h-71.5c-19.6 0-36.5-7-50.4-20.9-14-14-21-30.9-21-50.5V183.3c0-19.6 7-36.5
+                            20.9-50.4 13.9-13.9 30.8-20.9 50.4-20.9h485.9c19.6 0 36.5 7.1 50.4 20.9 14 14 21 30.8 21 50.4z m171.5 171.5v485.9c0 19.6-7.1 36.5-20.9 50.4-14
+                            14-30.8 20.9-50.4 20.9H354.9c-19.6 0-36.5-7.1-50.4-20.9-14-14-20.9-30.8-20.9-50.4V354.8c0-19.6 7-36.5 20.9-50.4 13.9-13.9 30.8-20.9 50.4-20.9h485.9c19.6
+                            0 36.5 7.1 50.4 20.9 13.9 14 20.9 30.8 20.9 50.4z" /></svg>
+                    </div>
+                    <div id="hover-text"></div>
+                    <div class="state-button">
+                        <div class="state-button-primary">
+                            <svg class="icon" style="margin-left:3.5px; margin-top:3.5px" width="15px" height="15px" fill="lightgrey" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M64 512a448 448 0 1 0 896 0 448 448 0 1 0-896 0z" /></svg>
+
+<!--                            <img src="{% static 'emailing/images/radio-button-on-outline.svg' %}" width="22px"; style="margin-bottom: 5px; z-index:999; filter: invert(95%) sepia(97%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);">-->
+                        </div>
+                        <div class="state-button-secondary">
+                            <div class="state-button-secondary-content">idle</div>
+                        </div>
+                    </div>
+                    <span class="subject_title">模型输出:</span>
+                    <div id="reply" contenteditable="true"></div>
+                </div>
+
+            </div>
+        </div>
+        <div id="right-cont">
+            <div id="eng_title">
+                <span style="font-family: "Microsoft YaHei", sans-seri">中文<span>GPT Demo
+            </div>
+            <div id="chi_title">
+                模型使用示例
+            </div>
+            <div class="dropdown">
+                <button id="model-btn" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    创新工场GPT2模型
+                </button>
+                <div class="dropdown-menu" aria-labelledby="model-btn">
+                    <button id="model1" class="dropdown-item">创新工场GPT2模型</button>
+                    <button id="model2" class="dropdown-item">清源模型</button>
+                </div>
+            </div>
+            <div id="panel">
+                <div id="panel-cont">
+                <div id="mobile-panel-delete">
+                    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-x" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+                <div class="variable-title">温度系数</div>
+                <div class="d-flex flex-row">
+                <input  id="tmp-range" type="range" class="slider"  min="0.7" max="1" value="0.9" step="0.05"><div  id="tmp-range-value">0.9</div>
+                </div>
+                <div class="variable-title">top_p</div>
+                <div class="d-flex flex-row">
+                <input id="topp-range" type="range" class="slider" min="0" max="1" value="0" step="0.01"><div id="topp-range-value">0</div>
+                </div>
+                <div class="variable-title">top_k</div>
+                <div class="d-flex flex-row">
+                <input id="topk-range" type="range" class="slider" min="0" max="30" value="10" step="1"><div id="topk-range-value" >10</div>
+                </div>
+                <div class="variable-title">段落生成长度</div>
+                <div class="d-flex flex-row">
+                <input id="length-range" type="range" class="slider" min="0" max="200" value="100" step="10"><div id="length-range-value">100</div>
+                </div>
+                </div>
+            </div>
+            <button id="generate">
+                生成回复
+            </button>
+        </div>
+    </div>
+    <div>
+    <svg  id="scroll-down" width="8em" height="8em" viewBox="0 0 16 16" class="bi bi-chevron-compact-down" fill="lightgrey" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z"/>
+    </svg>
+    </div>
+    <div id="words">
+        <div class="large-title">
+            什么是中文<span style=" font-family: Futura;">GPT</span>模型
+        </div>
+        <div class="explanation d-flex flex-row">
+            <div>
+                该模型是由创新工场AI工程院的科研团队自主研发的，基于预训练技术的超大规模中文生成模型，模型规模与OpenAI的GPT-2 Large相当。香港中文大学（深圳）数据科学学院副教授，创新工场大湾区研究院首席科学家宋彦博士主持了这一科研项目。模型参数量为：736,744,960 (parameters)，项目代码框架基于Huggingface   transformer GPT-2  模型。
+            </div>
+            <img id="logo" src="{% static 'emailing/images/chuangxin_color.svg' %}" width="400px" style="margin-left: 100px">
+        </div>
+        <div class="small-title">&nbsp;&nbsp;Top-p参数</div>
+        <div class="explanation">
+            在Top-p采样中，不是从仅最可能的K个单词中采样，而是从其累积概率超过一个阈值的最小可能单词集中进行选择，然后将这组单词重新分配概率。这样，单词集合的大小（也就是集合中单词的数量）可以根据下一个单词的概率分布动态地增加或减少。而被选择的词向量根据句子历史分布的变化而动态变化。考虑的候选者数量动态地增加和减少，它本质上是Top-k，这个常数项至于0到1之间。它很好地解决了Top-k不能动态转变置信区间的问题。
+        </div>
+        <div class="small-title">&nbsp;&nbsp;Top-k参数</div>
+        <div class="explanation">
+            在解码的过程中，把最高的前k个tokens的概率加起来总和作为先验概率，然后去预测一个token作为output token，在Top-k Sampling中，将挑选出k个最有可能的下一个单词，并且仅在这k个下一个单词之间重新为它们分配概率。GPT2就是采用了这种采样方案，这也是其生成故事效果不错的原因之一，但Top-k Sampling存在的问题是，常数k是提前给定的值，对于长短大小不一，语境不同的句子，我们可能有时需要比k更多的tokens。
+        </div>
+        <div id="chuangxin">Powered by: 创新工场人工智能工程院GPT模型</div>
+    </div>
+</main>
+
+</body>
+<script>
+
+    function generateEmail(){
+
+        $("#generate").on('click',function () {
+            $(".state-button-secondary-content").html("generating");
+            $(".state-button-secondary-content").css("transform", "translate3d(0, 0, 0)");
+            let input = $('#subject').text();
+            input = input.replace(/\s/g, "");
+            let tmp = document.querySelector('#tmp-range').value;
+            let topp = document.querySelector('#topp-range').value;
+            let topk = document.querySelector('#topk-range').value;
+            let length = document.querySelector('#length-range').value;
+            console.log(model_type);
+            $.ajax({
+                url:'',
+                type:'POST',
+                data:{model_type: model_type,
+                    content_text: input,
+                    tmp:tmp,
+                    topp:topp,
+                    topk:topk,
+                    length:length},
+                dataType: "json",
+                success:function (data) {
+                    let response = data['response'];
+                    $("#reply").append(`${response}`);
+                    $(".state-button-secondary-content").html("idle");
+                    $(".state-button-secondary-content").css("transform", "translate3d(-100%, 0, 0)");
+                },
+                error: function(){
+                    alert('系统错误请重试');
+                    $(".state-button-secondary-content").html("idle");
+                    $(".state-button-secondary-content").css("transform", "translate3d(-100%, 0, 0)");
+                },
+                timeout: 50000
+            });
+
+        });
+
+        $("#mobile-generate").on('click',function () {
+            $(".state-button-secondary-content").html("generating");
+            $(".state-button-secondary-content").css("transform", "translate3d(0, 0, 0)");
+            let input = $('#subject').text();
+            input = input.replace(/\s/g, "")
+            let tmp = document.querySelector('#tmp-range').value;
+            let topp = document.querySelector('#topp-range').value;
+            let topk = document.querySelector('#topk-range').value;
+            let length = document.querySelector('#length-range').value;
+            console.log(input);
+            $.ajax({
+                url:'',
+                type:'POST',
+                data:{model_type: model_type,
+                    content_text: input,
+                    tmp:tmp,
+                    topp:topp,
+                    topk:topk,
+                    length:length},
+                dataType: "json",
+                success:function (data) {
+                    let response = data["response"];
+                    $("#reply").append(`${response}`);
+                    $(".state-button-secondary-content").html("idle");
+                    $(".state-button-secondary-content").css("transform", "translate3d(-100%, 0, 0)");
+                },
+                error: function(){
+                    alert('系统错误请重试');
+                    $(".state-button-secondary-content").html("idle");
+                    $(".state-button-secondary-content").css("transform", "translate3d(-100%, 0, 0)");
+                },
+                timeout: 50000
+            });
+
+        });
+    }
+    let model_type = 1;
+    function chooseModel(){
+        $('#model1').on('click',function () {
+            model_type = 1;
+            $('#model-btn').text('创新工场GPT2模型');
+        });
+        $('#model2').on('click',function () {
+            model_type = 2;
+            $('#model-btn').text('清源模型');
+        })
+    }
+
+    function displayValue(){
+        let tmp = document.querySelector('#tmp-range');
+        tmp.oninput = function(){
+            $('#tmp-range-value').html(tmp.value);
+        };
+        let topp = document.querySelector('#topp-range');
+        topp.oninput = function(){
+            $('#topp-range-value').html(topp.value);
+        };
+        let topk = document.querySelector('#topk-range');
+        topk.oninput = function(){
+            $('#topk-range-value').html(topk.value);
+        };
+        let length = document.querySelector('#length-range');
+        length.oninput = function(){
+            $('#length-range-value').html(length.value);
+        };
+    }
+
+    function toggleQuesition(){
+        $("#question").mouseover(function () {
+            $("#question").attr("fill", "#272a28");
+            $("#notice").fadeIn('slow');
+            $("#notice-text").fadeIn('slow');
+
+        });
+        $("#question").mouseleave(function () {
+            $("#question").attr("fill","lightgrey");
+            $("#notice").fadeOut('slow');
+            $("#notice-text").fadeOut('slow');
+        })
+    }
+
+    function toggleStatebutton(){
+        $(".state-button").mouseover(function () {
+            $(".state-button-secondary-content").css("transform", "translate3d(0, 0, 0)");
+        });
+        $(".state-button").mouseleave(function () {
+            $(".state-button-secondary-content").css("transform", "translate3d(-100%, 0, 0)");
+        });
+    }
+
+    function clearEmail(){
+        $('#delete-email').mousemove(function () {
+            $('#delete-email svg').attr("fill", "#272a28");
+            $('#hover-text').html('清空');
+            $('#hover-text').css('visibility','visible');
+            $('#hover-text').css('margin-left','483px');
+        });
+        $('#delete-email').mouseleave(function () {
+            $('#delete-email svg').attr("fill", "lightgrey");
+            $('#hover-text').css('visibility','hidden');
+        });
+        $('#delete-email').on('click',function () {
+            $('#reply').html("");
+        })
+    }
+
+    function copyEmail(){
+        $('#copy-email').mousemove(function () {
+            $('#copy-email svg').attr("fill", "#272a28");
+            $('#hover-text').html('复制');
+            $('#hover-text').css('visibility','visible');
+            $('#hover-text').css('margin-left','448px');
+        });
+        $('#copy-email').mouseleave(function () {
+            $('#copy-email svg').attr("fill", "lightgrey");
+            $('#hover-text').css('visibility','hidden');
+        });
+        $('#copy-email').on('click',function () {
+            let $temp = $("<input>");
+            $("body").append($temp);
+            let copied = $('#reply').html();
+            copied = copied.replace(/<div>/g,'');
+            copied = copied.replace(/<\/div>/g,'\r\n');
+            copied = copied.replace(/<br>/g,'\r\n');
+            copied = copied.replace(/ /g,'');
+            console.log(copied);
+            $temp.val(copied).select();
+            document.execCommand("copy");
+            $temp.remove();
+            alert('邮件已复制！');
+        })
+    }
+
+    function toggleMobilePanel(){
+            $('#mobile-panel').on('click',function(){
+                $('#panel').css('margin-left', '10%');
+                $('#panel').css('width', '90%');
+                $('#panel').css('padding-left', '10%');
+                $('#panel-cont').css('display','block');
+            });
+            $('#mobile-panel-delete').on('click',function () {
+                $('#panel').css('margin-left', '98.5vw');
+                $('#panel').css('width', '0');
+                $('#panel').css('padding-left', '0');
+            });
+    }
+
+    function toggleWords(){
+        $('#scroll-down').on('click',function(){
+            $('#words').css('display','block');
+            // let body_rect = document.body.getBoundingClientRect();
+            let rect = document.getElementById('scroll-down').getBoundingClientRect();
+            console.log(rect.top);
+            $('body').animate({ scrollTop: rect.top}, 1000);
+        })
+    }
+
+    $(document).ready(function (){
+        generateEmail();
+        $("#input-bullet").on('keyup keydown', function(){
+            if (! $("#input-bullet").html()){
+                $("#input-bullet").append("<li></li>");
+            }
+        });
+        toggleWords();
+        chooseModel();
+        displayValue();
+        clearEmail();
+        toggleStatebutton();
+        toggleQuesition();
+        copyEmail();
+        toggleMobilePanel();
+    });
+
+</script>
+</html>

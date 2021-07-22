@@ -1,0 +1,73 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN" id="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>关于 | AI科幻世界</title>
+    <link href="{% static 'writing/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'writing/css/scifi.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'writing/images/logo_full.svg' %}" height="42" class="d-inline-block align-top" alt=""></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav float-right float-lg-none text-right text-lg-left">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'writing' %}">自由写作</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'chatting' %}">对话接龙</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dungeon' %}">AI dungeon</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">关于</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container mt-5 mb-5">
+      <div class="row">
+        <div class="col">
+          <h1>关于AI科幻世界</h1>
+          <p>“AI科幻世界”是创新工场主办的2020年DeeCamp人工智能训练营中，由大学生团队设计和创建的人工智能人机协作科幻小说写作程序，可以与人类作者协作交互，共同完成一篇科幻小说的创作。</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h1>研发团队介绍</h1>
+          <p>DeeCamp 2020大学生团队：姓名，学校；姓名，学校。</p>
+          <p>创新工场AI工程院科研与工程支持团队：姓名，姓名，姓名。</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h1>版权声明</h1>
+          <p>本程序使用了以下开源数据或代码：</p>
+          <ul>
+            <li>代码，协议，链接</li>
+            <li>代码，协议，链接</li>
+          </ul>
+          <p>其他必要的法律声明</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-5 d-flex flex-column justify-content-center align-items-center">
+      <div><img src="{% static 'writing/images/deecamp.svg' %}" height="32"></div>
+      <div class="footer-text">DeeCamp人工智能训练营学生项目</div>
+    </footer>
+
+    <script src="{% static 'writing/js/jquery.min.js' %}"></script>
+    <script src="{% static 'writing/js/popper.min.js' %}"></script>
+    <script src="{% static 'writing/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
