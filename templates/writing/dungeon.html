@@ -1,0 +1,72 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN" id="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AI Dungeon | AI科幻世界</title>
+    <link href="{% static 'writing/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'writing/css/scifi.css' %}" rel="stylesheet">
+</head>
+<body>
+<main class="container-fluid vh-100 d-flex flex-column p-0">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'writing/images/logo_full.svg' %}" height="42" class="d-inline-block align-top" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav float-right float-lg-none text-right text-lg-left">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'writing' %}">自由写作</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chatting' %}">对话接龙</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#}">AI dungeon</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">关于</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5 mb-5 flex-grow-1 d-flex flex-column justify-content-space-between">
+
+        <div id="dialog-panel" class="input-box flex-grow-1 m-1">
+            <div id="dialog-container" class="container">
+            </div>
+        </div>
+
+        <form id="dialog-form">
+            {% csrf_token %}
+            <div class="m-1">
+                <input id="human-input" class="input-box p-2 flex-grow w-100" type="text" placeholder="请输入人类的话">
+            </div>
+
+            <nav class="navbar navbar-light bg-white m-1 p-0">
+                <span class="label mr-2">作者</span>
+                <input id="human-name" class="input-box mr-auto p-2" size="6" type="text" value="佚名">
+                <input id="talk-button" class="btn btn-outline-primary mr-2" type="submit" value="生成">
+                <input id="rollback-button" class="btn btn-outline-primary mr-2" type="button" value="撤销">
+                <input id="clear-button" class="btn btn-outline-primary mr-2" type="button" value="清空">
+            </nav>
+
+        </form>
+
+    </div>
+
+</main>
+
+<footer class="mt-5 d-flex flex-column justify-content-center align-items-center">
+    <div><img src="{% static 'writing/images/deecamp.svg' %}" height="32"></div>
+    <div class="footer-text">DeeCamp人工智能训练营学生项目</div>
+</footer>
+
+<script src="{% static 'writing/js/jquery.min.js' %}"></script>
+<script src="{% static 'writing/js/popper.min.js' %}"></script>
+<script src="{% static 'writing/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'writing/js/dungeon.js' %}"></script>
+</body>
+</html>
