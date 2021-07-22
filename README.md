@@ -13,4 +13,4 @@ Front-end scripts locations(JS with jQuery & Bootstrap):
 4. Pure model toggler: AI-writing/template/emailing/model.html
 5. AI Scientific Fiction: AI-writing/generator: template/writing 
 
-
+A demo of some screens can be found at https://xinyubai.myportfolio.com/my-work-at-sinovation-ventures (doesn't include all 5)
